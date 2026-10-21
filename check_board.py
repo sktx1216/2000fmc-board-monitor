@@ -310,6 +310,15 @@ def main() -> int:
                 continue
 
             log(f"마지막 확인 번호: {board['name']} {last_seen_number}")
+            if latest.number < last_seen_number:
+                set_last_seen_number(state, board, latest.number)
+                log(
+                    f"게시글 번호 역행 감지: {board['name']} "
+                    f"{last_seen_number} -> {latest.number}. "
+                    "삭제된 게시글이 있는 것으로 보고 기준 번호를 복구합니다."
+                )
+                continue
+
             new_posts = find_new_posts(posts, last_seen_number)
             if not new_posts:
                 log(f"새 게시글이 없습니다: {board['name']}")
