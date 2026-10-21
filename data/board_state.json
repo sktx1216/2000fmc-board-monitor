@@ -3,33 +3,86 @@
     "i-74": {
       "name": "고객의 소리",
       "last_seen_number": 222,
-      "updated_at": "2026-10-21T01:03:57.227382+00:00",
+      "seen_post_ids": [
+        "ntt_sn:380",
+        "ntt_sn:379",
+        "ntt_sn:360",
+        "ntt_sn:359",
+        "ntt_sn:357",
+        "ntt_sn:356",
+        "ntt_sn:355",
+        "ntt_sn:353",
+        "ntt_sn:351",
+        "ntt_sn:350"
+      ],
+      "updated_at": "2026-10-21T01:05:54.601923+00:00",
       "board_url": "https://www.2000fmc.or.kr/ic-kr/bbs/i-74/list.do"
     },
     "i-75": {
       "name": "고객제안",
       "last_seen_number": 12,
-      "updated_at": "2026-10-21T01:03:58.475727+00:00",
+      "seen_post_ids": [
+        "ntt_sn:22",
+        "ntt_sn:21",
+        "ntt_sn:20",
+        "ntt_sn:19",
+        "ntt_sn:18",
+        "ntt_sn:15",
+        "ntt_sn:14",
+        "ntt_sn:13",
+        "ntt_sn:12",
+        "ntt_sn:11"
+      ],
+      "updated_at": "2026-10-21T01:05:55.506972+00:00",
       "board_url": "https://www.2000fmc.or.kr/ic-kr/bbs/i-75/list.do"
     },
     "i-76": {
       "name": "주민참여예산",
       "last_seen_number": 13,
-      "updated_at": "2026-10-21T01:03:59.924813+00:00",
+      "seen_post_ids": [
+        "ntt_sn:25",
+        "ntt_sn:24",
+        "ntt_sn:22",
+        "ntt_sn:21",
+        "ntt_sn:20",
+        "ntt_sn:19",
+        "ntt_sn:18",
+        "ntt_sn:9",
+        "ntt_sn:8",
+        "ntt_sn:7"
+      ],
+      "updated_at": "2026-10-21T01:05:56.485598+00:00",
       "board_url": "https://www.2000fmc.or.kr/ic-kr/bbs/i-76/list.do"
     },
     "i-77": {
       "name": "칭찬합시다",
       "last_seen_number": 16,
-      "updated_at": "2026-10-21T01:04:01.171135+00:00",
+      "seen_post_ids": [
+        "ntt_sn:27",
+        "ntt_sn:23",
+        "ntt_sn:22",
+        "ntt_sn:21",
+        "ntt_sn:20",
+        "ntt_sn:19",
+        "ntt_sn:18",
+        "ntt_sn:17",
+        "ntt_sn:14",
+        "ntt_sn:13"
+      ],
+      "updated_at": "2026-10-21T01:05:57.470545+00:00",
       "board_url": "https://www.2000fmc.or.kr/ic-kr/bbs/i-77/list.do"
     },
     "i-78": {
       "name": "안전신문고",
       "last_seen_number": 3,
-      "updated_at": "2026-10-21T01:04:02.349554+00:00",
+      "seen_post_ids": [
+        "ntt_sn:3",
+        "ntt_sn:2",
+        "ntt_sn:1"
+      ],
+      "updated_at": "2026-10-21T01:05:58.477633+00:00",
       "board_url": "https://www.2000fmc.or.kr/ic-kr/bbs/i-78/list.do"
     }
   },
-  "updated_at": "2026-10-21T01:04:02.349603+00:00"
+  "updated_at": "2026-10-21T01:05:58.478614+00:00"
 }

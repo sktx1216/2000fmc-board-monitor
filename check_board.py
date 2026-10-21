@@ -205,18 +205,38 @@ def get_last_seen_number(state: dict, board_id: str) -> int | None:
     return int(value) if value is not None else None
 
 
-def set_last_seen_number(state: dict, board: dict[str, str], number: int) -> None:
+def post_id(post: BoardPost) -> str:
+    parsed = urlparse(post.link)
+    ntt_sn = (parse_qs(parsed.query).get("ntt_sn") or [""])[0]
+    return f"ntt_sn:{ntt_sn}" if ntt_sn else post.link
+
+
+def get_seen_post_ids(state: dict, board_id: str) -> set[str] | None:
+    board_state = state.get("boards", {}).get(board_id, {})
+    values = board_state.get("seen_post_ids")
+    return set(values) if isinstance(values, list) else None
+
+
+def set_board_state(
+    state: dict,
+    board: dict[str, str],
+    posts: Iterable[BoardPost],
+    previous_seen_ids: Iterable[str] = (),
+) -> None:
+    posts = list(posts)
+    seen_ids = list(dict.fromkeys([post_id(post) for post in posts] + list(previous_seen_ids)))
     state.setdefault("boards", {})[board["id"]] = {
         "name": board["name"],
-        "last_seen_number": number,
+        "last_seen_number": max((post.number for post in posts), default=0),
+        "seen_post_ids": seen_ids[:200],
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "board_url": board["url"],
     }
 
 
-def find_new_posts(posts: Iterable[BoardPost], last_seen_number: int) -> list[BoardPost]:
+def find_new_posts(posts: Iterable[BoardPost], seen_post_ids: set[str]) -> list[BoardPost]:
     return sorted(
-        [post for post in posts if post.number > last_seen_number],
+        [post for post in posts if post_id(post) not in seen_post_ids],
         key=lambda item: (item.board_name, item.number),
     )
 
@@ -287,7 +307,8 @@ def send_email(posts: list[BoardPost]) -> None:
 def main() -> int:
     state = load_state()
     all_new_posts: list[BoardPost] = []
-    latest_by_board: dict[str, int] = {}
+    posts_by_board: dict[str, list[BoardPost]] = {}
+    seen_by_board: dict[str, set[str]] = {}
     errors: list[str] = []
 
     for board in BOARDS:
@@ -296,33 +317,26 @@ def main() -> int:
             html = fetch_board_html(board["url"])
             posts = parse_posts(board, html)
             latest = posts[0]
-            latest_by_board[board["id"]] = latest.number
+            posts_by_board[board["id"]] = posts
             log(
                 f"최신 게시글: {board['name']} 번호={latest.number}, 제목={latest.title}, 등록일={latest.date}"
             )
 
-            last_seen_number = get_last_seen_number(state, board["id"])
-            if last_seen_number is None:
-                set_last_seen_number(state, board, latest.number)
+            seen_post_ids = get_seen_post_ids(state, board["id"])
+            if seen_post_ids is None:
+                set_board_state(state, board, posts)
                 log(
-                    f"첫 확인 게시판입니다. 알림 없이 {board['name']} 최신 번호 {latest.number}만 저장합니다."
+                    f"고유 ID 기준 첫 확인입니다. 알림 없이 {board['name']} "
+                    f"현재 게시글 {len(posts)}건을 저장합니다."
                 )
                 continue
 
-            log(f"마지막 확인 번호: {board['name']} {last_seen_number}")
-            if latest.number < last_seen_number:
-                set_last_seen_number(state, board, latest.number)
-                log(
-                    f"게시글 번호 역행 감지: {board['name']} "
-                    f"{last_seen_number} -> {latest.number}. "
-                    "삭제된 게시글이 있는 것으로 보고 기준 번호를 복구합니다."
-                )
-                continue
-
-            new_posts = find_new_posts(posts, last_seen_number)
+            seen_by_board[board["id"]] = seen_post_ids
+            log(f"저장된 게시글 ID: {board['name']} {len(seen_post_ids)}건")
+            new_posts = find_new_posts(posts, seen_post_ids)
             if not new_posts:
                 log(f"새 게시글이 없습니다: {board['name']}")
-                set_last_seen_number(state, board, max(latest.number, last_seen_number))
+                set_board_state(state, board, posts, seen_post_ids)
                 continue
 
             log(f"새 게시글 {len(new_posts)}건 발견: {board['name']}")
@@ -336,9 +350,9 @@ def main() -> int:
     if all_new_posts:
         send_email(all_new_posts)
         for board in BOARDS:
-            latest_number = latest_by_board.get(board["id"])
-            if latest_number is not None:
-                set_last_seen_number(state, board, latest_number)
+            posts = posts_by_board.get(board["id"])
+            if posts is not None:
+                set_board_state(state, board, posts, seen_by_board.get(board["id"], set()))
         log(f"이메일 발송 완료: {MAIL_TO}")
 
     save_state(state)
