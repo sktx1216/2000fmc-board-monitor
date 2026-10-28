@@ -1,0 +1,11 @@
+{
+  "name": "2000fmc-board-monitor",
+  "private": true,
+  "scripts": {
+    "apps-script:status": "clasp status",
+    "apps-script:push": "clasp push --force"
+  },
+  "devDependencies": {
+    "@google/clasp": "3.4.1"
+  }
+}

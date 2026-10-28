@@ -4,6 +4,8 @@
 
 Google Apps Script 운영 소스는 `apps-script/` 폴더에 있습니다. Apps Script가 게시판을 직접 확인하고 로그인한 Google 계정의 Gmail로 알림을 발송합니다.
 
+GitHub와 Apps Script는 `clasp`로 연결됩니다. `main` 브랜치의 Apps Script 소스가 변경되면 `Deploy Apps Script` 워크플로가 `CLASPRC_JSON` GitHub Secret을 사용해 해당 Apps Script 프로젝트로 자동 배포합니다.
+
 이 저장소는 이천시설관리공단 게시판들을 확인하고, 새 게시글이 있으면 `ssk1024@2000fmc.or.kr`로 이메일을 보내는 Python 스크립트입니다.
 
 ## 모니터링 대상
