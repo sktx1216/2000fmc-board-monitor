@@ -91,13 +91,18 @@ function checkBoards() {
   }
 }
 
-function installHourlyTrigger() {
+function installBusinessHourTriggers() {
   removeBoardTriggers_();
-  ScriptApp.newTrigger('scheduledBoardCheck')
-    .timeBased()
-    .everyHours(1)
-    .create();
-  console.log('1시간 간격 트리거를 설치했습니다.');
+  for (let hour = CONFIG.startHour; hour <= CONFIG.endHour; hour += 1) {
+    ScriptApp.newTrigger('scheduledBoardCheck')
+      .timeBased()
+      .atHour(hour)
+      .nearMinute(30)
+      .everyDays(1)
+      .inTimezone(CONFIG.timezone)
+      .create();
+  }
+  console.log('평일 09:30~17:30 시간대별 트리거 9개를 설치했습니다.');
 }
 
 function removeBoardTriggers_() {

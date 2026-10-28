@@ -6,6 +6,8 @@ Google Apps Script 운영 소스는 `apps-script/` 폴더에 있습니다. Apps 
 
 GitHub와 Apps Script는 `clasp`로 연결됩니다. `main` 브랜치의 Apps Script 소스가 변경되면 `Deploy Apps Script` 워크플로가 `CLASPRC_JSON` GitHub Secret을 사용해 해당 Apps Script 프로젝트로 자동 배포합니다.
 
+Apps Script에서 `installBusinessHourTriggers`를 한 번 실행하면 09시 30분부터 17시 30분까지 시간대별 트리거 9개가 설치됩니다. 실행 함수가 월요일부터 금요일까지만 게시판을 확인하며, Apps Script 특성상 실제 실행 시각은 지정 분의 약 ±15분 범위에서 조정될 수 있습니다.
+
 이 저장소는 이천시설관리공단 게시판들을 확인하고, 새 게시글이 있으면 `ssk1024@2000fmc.or.kr`로 이메일을 보내는 Python 스크립트입니다.
 
 ## 모니터링 대상
