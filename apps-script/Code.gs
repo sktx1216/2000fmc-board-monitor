@@ -138,10 +138,11 @@ function fetchBoardPosts_(board) {
       if (status < 200 || status >= 300) {
         throw new Error('HTTP ' + status);
       }
-      const posts = parseBoardPosts_(board, response.getContentText('UTF-8'));
-      if (posts.length === 0) {
-        throw new Error('게시글을 찾지 못했습니다.');
+      const html = response.getContentText('UTF-8');
+      if (!/<table\b/i.test(html) || !/cell-subject/i.test(html)) {
+        throw new Error('게시판 목록 형식을 확인하지 못했습니다.');
       }
+      const posts = parseBoardPosts_(board, html);
       return posts;
     } catch (error) {
       lastError = error;
