@@ -164,11 +164,16 @@ function parseBoardPosts_(board, html) {
 
     const numberText = cleanText_(numberMatch[1]);
     const numberValue = Number((numberText.match(/\d+/) || [])[0]);
-    const linkMatch = subjectMatch[1].match(/<a[^>]*href=["']([^"']*detail\.do\?ntt_sn=(\d+)[^"']*)["'][^>]*>([\s\S]*?)<\/a>/i);
-    if (!numberValue || !linkMatch) return;
+    const anchorMatch = subjectMatch[1].match(/<a\b([^>]*)>([\s\S]*?)<\/a>/i);
+    if (!numberValue || !anchorMatch) return;
 
-    const nttSn = linkMatch[2];
-    const title = cleanText_(linkMatch[3].replace(/<span[^>]*class=["'][^"']*comment-number[^"']*["'][^>]*>[\s\S]*?<\/span>/gi, ''));
+    const attributes = anchorMatch[1];
+    const hrefIdMatch = attributes.match(/href=["'][^"']*detail\.do\?ntt_sn=(\d+)[^"']*["']/i);
+    const dataIdMatch = attributes.match(/data-ntt-sn=["'](\d+)["']/i);
+    const nttSn = hrefIdMatch ? hrefIdMatch[1] : (dataIdMatch ? dataIdMatch[1] : '');
+    if (!nttSn) return;
+
+    const title = cleanText_(anchorMatch[2].replace(/<span[^>]*class=["'][^"']*comment-number[^"']*["'][^>]*>[\s\S]*?<\/span>/gi, ''));
     if (!title) return;
 
     posts.push({
